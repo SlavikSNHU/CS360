@@ -1,2 +1,1 @@
-# CS360
-CS360 Final Project
+# CS360 Final Project
