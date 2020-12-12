@@ -13,10 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class LoginScreen extends AppCompatActivity {
+    private  SQLiteManager db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+
+        // Connect to database
+        db = new SQLiteManager(this);
 
         // Configure all login screen UI events
         ConfigureControlEvents();
@@ -31,8 +36,24 @@ public class LoginScreen extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check username information
+                // Get entered username and password
+                String username = ((EditText)findViewById(R.id.editTextTextPersonName)).getText().toString();
+                String password = ((EditText)findViewById(R.id.editTextTextPassword)).getText().toString();
 
+                // Check username information
+                if(db.CheckUserCredentials(username, password)){
+                    // Notify user
+                    DisplayInfo("Welcome Back " + username, Color.GREEN, true);
+
+                    // Small delay to allow user to see message before moving to next screen
+                    Delay(1000);
+
+                    // Go to Main screen
+                    startActivity(new Intent(LoginScreen.this, MainScreen.class ));
+                }else{
+                    // Notify user
+                    DisplayInfo("Wrong Password", Color.RED, true);
+                }
             }
         });
 
@@ -47,13 +68,16 @@ public class LoginScreen extends AppCompatActivity {
                 String password = ((EditText)findViewById(R.id.editTextTextPassword)).getText().toString();
 
                 // Check if user is already registered
-                if(SQLiteManager.CheckUser(username, password)){
+                if(db.CheckUser(username)){
                     // If already registered then display information notifying user
-                    DisplayInfo(username + " Is Already Registered. Use Login Button.", Color.YELLOW, true);
+                    DisplayInfo(username + " is Already Registered. Use Login Button.", Color.DKGRAY, true);
                 }else{
-                    // If not then add to database and go to main screen
-
                     // Add user credentials inside SQLite database
+                    if(!db.AddUserCredentials(username, password)){
+                        // Failed to add user
+                        DisplayInfo("Unable to Register " + username + ", Please Try Again.", Color.RED, true);
+                        return;
+                    }
 
                     // Notify user
                     DisplayInfo(username + " Has Been Registered.", Color.GREEN, true);
@@ -86,25 +110,38 @@ public class LoginScreen extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Check if password has been entered
-                if(usernameEditText.getText().length() > 0 && passwordEditText.getText().length() > 0){
-                    // Enable login and register buttons
+                // Check if username has been entered
+                if(usernameEditText.getText().length() > 0 ){
+                    // Enable login buttons
                     loginButton.setEnabled(true);
-                    registerButton.setEnabled(true);
+                    DisplayInfo("", 0, false);
                 }else{
-                    // Disable login register buttons
+                    // Disable login and register buttons
                     loginButton.setEnabled(false);
                     registerButton.setEnabled(false);
+                    DisplayInfo("Username Length Must be Greater", Color.RED, true);
+                }
+
+                if(passwordEditText.getText().length() > 5){
+                    // Enable register buttons
+                    registerButton.setEnabled(true);
+                    DisplayInfo("", 0, false);
+                }else{
+                    // Disable login and register buttons
+                    loginButton.setEnabled(false);
+                    registerButton.setEnabled(false);
+                    DisplayInfo("Password Length Must be Greater", Color.RED, true);
                 }
 
                 if(usernameEditText.getText().length() > 0) {
                     //After user is done entering the text check if username exist inside database
-                    if (SQLiteManager.CheckUser(usernameEditText.getText().toString(), passwordEditText.getText().toString())) {
+                    if (db.CheckUser(usernameEditText.getText().toString())) {
                         // Let user know that username exists
                         DisplayInfo(usernameEditText.getText().toString() + " Exists", Color.GREEN, true);
                     } else {
                         // Let user know that username does not exists
                         DisplayInfo(usernameEditText.getText().toString() + " Does Not Exist", Color.RED, true);
+                        loginButton.setEnabled(false);
                     }
                 }else{
                     // Hide info view from user
@@ -124,15 +161,35 @@ public class LoginScreen extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 // Check if username has been entered
-                if(usernameEditText.getText().length() > 0 && passwordEditText.getText().length() > 0){
-                    // Enable login and register buttons
+                if(usernameEditText.getText().length() > 0 ){
+                    // Enable login buttons
                     loginButton.setEnabled(true);
-                    registerButton.setEnabled(true);
+                    DisplayInfo("", 0, false);
                 }else{
-                    // Disable login register buttons
+                    // Disable login and register buttons
                     loginButton.setEnabled(false);
                     registerButton.setEnabled(false);
+                    DisplayInfo("Username Length Must be Greater", Color.RED, true);
                 }
+
+                if(passwordEditText.getText().length() > 5){
+                    // Enable register buttons
+                    registerButton.setEnabled(true);
+                    DisplayInfo("", 0, false);
+                }else{
+                    // Disable login and register buttons
+                    loginButton.setEnabled(false);
+                    registerButton.setEnabled(false);
+                    DisplayInfo("Password Length Must be Greater", Color.RED, true);
+                }
+
+                // Hide login or register button if user is new or exist
+                if (!db.CheckUser(usernameEditText.getText().toString())) {
+                    loginButton.setEnabled(false);
+                }else{
+                    registerButton.setEnabled(false);
+                }
+
             }
         });
     }
