@@ -8,8 +8,8 @@
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/mainLayout"
-        android:layout_width="382dp"
-        android:layout_height="295dp"
+        android:layout_width="420dp"
+        android:layout_height="300dp"
         android:layout_marginStart="16dp"
         android:background="#A3E3DD"
         android:paddingLeft="5dp"
@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/textRow1Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -86,7 +86,7 @@
 
             <TextView
                 android:id="@+id/textRow2Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -138,7 +138,7 @@
 
             <TextView
                 android:id="@+id/textRow3Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -190,7 +190,7 @@
 
             <TextView
                 android:id="@+id/textRow4Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -242,7 +242,7 @@
 
             <TextView
                 android:id="@+id/textRow5Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -294,7 +294,7 @@
 
             <TextView
                 android:id="@+id/textRow6Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -346,7 +346,7 @@
 
             <TextView
                 android:id="@+id/textRow7Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -398,7 +398,7 @@
 
             <TextView
                 android:id="@+id/textRow8Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -450,7 +450,7 @@
 
             <TextView
                 android:id="@+id/textRow9Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -502,7 +502,7 @@
 
             <TextView
                 android:id="@+id/textRow10Day"
-                android:layout_width="218dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -549,7 +549,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="223dp"
         android:layout_height="31dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="4dp"
         android:layout_marginBottom="8dp"
         android:indeterminate="false"
         android:indeterminateDrawable="@android:drawable/progress_horizontal"
@@ -582,7 +582,7 @@
         android:id="@+id/textProgressTitle"
         android:layout_width="200dp"
         android:layout_height="30dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="4dp"
         android:layout_marginBottom="4dp"
         android:fontFamily="sans-serif-medium"
         android:labelFor="@id/pbWeightGoal"
@@ -599,8 +599,8 @@
         android:id="@+id/footer"
         android:layout_width="120dp"
         android:layout_height="192dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="36dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/mainLayout">
@@ -649,11 +649,9 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="58dp"
         android:layout_height="52dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginBottom="168dp"
         android:foreground="@android:drawable/sym_action_email"
         android:onClick="SetMessageAccess"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/footer" />
+        app:layout_constraintBottom_toTopOf="@+id/textCurrentGoal"
+        app:layout_constraintStart_toEndOf="@+id/pbWeightGoal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

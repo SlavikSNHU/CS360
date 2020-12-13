@@ -60,6 +60,10 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
+    /**
+     * Go trough all grid layout elements and update them with values from database
+     * @param userLogs List of logs
+     */
     private void PopulateGridComponents(SQLiteManager.UserLog[] userLogs) {
         GridLayout gl = findViewById(R.id.mainLayout);
         for (int i = 0; i < gl.getChildCount(); i++) {
@@ -82,6 +86,9 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
+    /**
+     * Hide all grid layout elements
+     */
     private void HideLogs() {
         // Set all logs invisible
         GridLayout gl = findViewById(R.id.mainLayout);
