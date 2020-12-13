@@ -31,7 +31,10 @@ public class LoginScreen extends AppCompatActivity {
      * Configure all UI element events
      */
     private void ConfigureControlEvents(){
-        /* Configure "Login" button to check username information from SQLite Database */
+        // Hide info UI
+        DisplayInfo("", 0, false);
+
+        // Configure "Login" button to check username information from SQLite Database
         Button loginButton = findViewById(R.id.btnLogin);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +52,7 @@ public class LoginScreen extends AppCompatActivity {
                     Delay(1000);
 
                     // Go to Main screen
-                    startActivity(new Intent(LoginScreen.this, MainScreen.class ));
+                    GoToMainScreen(username);
                 }else{
                     // Notify user
                     DisplayInfo("Wrong Password", Color.RED, true);
@@ -86,7 +89,7 @@ public class LoginScreen extends AppCompatActivity {
                     Delay(1000);
 
                     // Go to Main screen
-                    startActivity(new Intent(LoginScreen.this, MainScreen.class ));
+                    GoToMainScreen(username);
                 }
             }
         });
@@ -99,6 +102,8 @@ public class LoginScreen extends AppCompatActivity {
          when no text has been entered */
         EditText usernameEditText = findViewById(R.id.editTextTextPersonName);
         EditText passwordEditText = findViewById(R.id.editTextTextPassword);
+        usernameEditText.setText("");
+        passwordEditText.setText("");
         usernameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -230,6 +235,17 @@ public class LoginScreen extends AppCompatActivity {
                 e.printStackTrace();
             }
         }));
+    }
+
+    /**
+     * Switch to main screen
+     * @param userName User Name
+     */
+    private void GoToMainScreen(String userName){
+        db.close();
+        Intent intent = new Intent(LoginScreen.this, MainScreen.class );
+        intent.putExtra("userName", userName);
+        startActivity(intent);
     }
 }
 
