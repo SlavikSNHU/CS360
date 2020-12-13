@@ -35,7 +35,7 @@
 
             <TextView
                 android:id="@+id/textRow1Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -87,7 +87,7 @@
 
             <TextView
                 android:id="@+id/textRow2Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -139,7 +139,7 @@
 
             <TextView
                 android:id="@+id/textRow3Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -191,7 +191,7 @@
 
             <TextView
                 android:id="@+id/textRow4Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -243,7 +243,7 @@
 
             <TextView
                 android:id="@+id/textRow5Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -295,7 +295,7 @@
 
             <TextView
                 android:id="@+id/textRow6Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -347,7 +347,7 @@
 
             <TextView
                 android:id="@+id/textRow7Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -399,7 +399,7 @@
 
             <TextView
                 android:id="@+id/textRow8Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -451,7 +451,7 @@
 
             <TextView
                 android:id="@+id/textRow9Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"
@@ -503,7 +503,7 @@
 
             <TextView
                 android:id="@+id/textRow10Day"
-                android:layout_width="242dp"
+                android:layout_width="252dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="1dp"

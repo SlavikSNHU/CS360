@@ -78,7 +78,7 @@ public class MainScreen extends AppCompatActivity {
             ((TextView) layout.getChildAt(0)).setText(userLogs[i].Date);
 
             // Set weight
-            ((TextView) layout.getChildAt(1)).setText(userLogs[i].Weight);
+            ((TextView) layout.getChildAt(1)).setText(userLogs[i].Weight + "lb");
         }
     }
 
@@ -126,8 +126,12 @@ public class MainScreen extends AppCompatActivity {
 
             // Check if SMS should be sent
             if (db.ShouldSendMessages(userName)) {
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage("555-521-5554", null, "Congratulation You Have Reached Goal Weight", null, null);
+                // Get total number of days that took to reach goal
+                int numberOfDays = db.GetTotalNumberOfDays(userName);
+                if(numberOfDays > 0){
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage("555-521-5554", null, "Congratulation You Have Reached Goal Weight of " + currentGoal + "lb After " + numberOfDays + " Days!", null, null);
+                }
             }
 
             // Display congratulation message

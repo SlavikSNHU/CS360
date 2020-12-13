@@ -140,7 +140,7 @@ public class SQLiteManager extends  SQLiteOpenHelper{
         }
 
         // Construct query to get all records for selected user
-        String query = "SELECT * FROM " + USER_LOG_TABLE_NAME + " WHERE " + USER_ID_COLUMN_NAME + " = '" + userID + "' ORDER BY " + USER_LOG_ID_COLUMN_NAME + " DESC LIMIT 1";
+        String query = "SELECT * FROM " + USER_LOG_TABLE_NAME + " WHERE " + USER_ID_COLUMN_NAME + " = '" + userID + "' ORDER BY " + USER_LOG_ID_COLUMN_NAME + " ASC LIMIT 1";
         try (Cursor cursor = database.rawQuery(query, null)) {
             if(cursor!=null) {
                 if(cursor.getCount()>0) {
@@ -196,7 +196,7 @@ public class SQLiteManager extends  SQLiteOpenHelper{
 
         // Get today date and construct date string
         Calendar calendar = Calendar.getInstance();
-        DateFormat df = new SimpleDateFormat("EEEE MMMM F, y");
+        DateFormat df = new SimpleDateFormat("EEEE MMMM d, y");
         String logDate = df.format(calendar.getTime());
 
         // Check if record already exist for current date and update it
@@ -367,6 +367,27 @@ public class SQLiteManager extends  SQLiteOpenHelper{
         }catch (SQLException e){
             Log.e("MyApp", "LogCurrentWeight", e);
             return false;
+        }
+    }
+
+    /**
+     * Return number of days that user logged weight
+     * @param userName User Name
+     * @return Number of days
+     */
+    public int GetTotalNumberOfDays(String userName){
+        // Get id of selected user
+        int userID = GetUserID(userName);
+        if(userID < 0){
+            return -1;
+        }
+
+        String query = "SELECT * FROM " + USER_LOG_TABLE_NAME + " WHERE " + USER_ID_COLUMN_NAME + " = '" + userID + "'";
+        try (Cursor cursor = database.rawQuery(query, null)) {
+            if(cursor!=null) {
+                return  cursor.getCount();
+                }
+            return -1;
         }
     }
 
