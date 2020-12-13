@@ -11,10 +11,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -33,8 +31,7 @@ public class MainScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
-        //userName = getIntent().getStringExtra("userName");
-        userName = "Slavik";
+        userName = getIntent().getStringExtra("userName");
 
         // Connect to database
         db = new SQLiteManager(this);
@@ -44,7 +41,6 @@ public class MainScreen extends AppCompatActivity {
 
         // Update UI to match user current progress
         UpdateMainUI();
-
 
         // Configure all main screen UI events
         ConfigureControlEvents(this);
@@ -150,10 +146,10 @@ public class MainScreen extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .show();
 
-            /* Clear all records
+            // Clear all records
             if(!db.ClearLogs(userName)){
                 return;
-            }*/
+            }
         }
 
         // Update goal text

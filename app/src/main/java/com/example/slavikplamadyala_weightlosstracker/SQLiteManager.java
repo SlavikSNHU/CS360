@@ -390,6 +390,7 @@ public class SQLiteManager extends  SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Remove tables
         db.execSQL("DROP TABLE IF EXISTS " + USER_CREDENTIALS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + USER_LOG_TABLE_NAME);
         onCreate(db);
