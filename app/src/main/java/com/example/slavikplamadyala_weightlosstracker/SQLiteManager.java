@@ -18,7 +18,7 @@ import java.util.Date;
 public class SQLiteManager extends  SQLiteOpenHelper{
 
     private SQLiteDatabase database; // Database object
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "wtusers.db";
 
     private static final String USER_CREDENTIALS_TABLE_NAME = "userCredentials";
@@ -31,6 +31,7 @@ public class SQLiteManager extends  SQLiteOpenHelper{
     private static final String USER_NAME_COLUMN_NAME = "userName";
     private static final String USER_PASSWORD_COLUMN_NAME = "userPassword";
     private static final String USER_GOAL_WEIGHT_COLUMN_NAME = "userGoalWeight";
+    private static final String USER_NOTIFY_COLUMN_NAME = "sendMessages";
 
     // USER_LOG_TABLE Columns
     private static final String USER_LOG_ID_COLUMN_NAME = "logID";
@@ -93,10 +94,11 @@ public class SQLiteManager extends  SQLiteOpenHelper{
         String command = "INSERT INTO " + USER_CREDENTIALS_TABLE_NAME + " (" +
                 USER_NAME_COLUMN_NAME + ", " +
                 USER_PASSWORD_COLUMN_NAME + ", " +
-                USER_GOAL_WEIGHT_COLUMN_NAME +
+                USER_GOAL_WEIGHT_COLUMN_NAME  + ", " +
+                USER_NOTIFY_COLUMN_NAME +
                 ") VALUES ('" +
                 userName + "', '" +
-                userPassword + "', '0')";
+                userPassword + "', '0', 'False')";
         try{
             database.execSQL(command);
             return true;
@@ -330,6 +332,44 @@ public class SQLiteManager extends  SQLiteOpenHelper{
         }
     }
 
+    /**
+     * Indicate if messages should be send to user
+     * @param userName User Name
+     * @return True if messages should be sent
+     */
+    public boolean ShouldSendMessages(String userName){
+        String query = "SELECT * FROM " + USER_CREDENTIALS_TABLE_NAME + " WHERE " + USER_NAME_COLUMN_NAME + " = '" + userName + "'";
+        try (Cursor cursor = database.rawQuery(query, null)) {
+            if(cursor!=null) {
+                if(cursor.getCount()>0) {
+                    cursor.moveToFirst();
+                    return cursor.getString(cursor.getColumnIndex(USER_NOTIFY_COLUMN_NAME)).equals("True");
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Set status if messages should be sent
+     * @param userName User Name
+     * @param state True/False
+     * @return True if message sending status updated successfully
+     */
+    public boolean SetSendMessages(String userName, String state){
+        // Update send message status
+        String command = "UPDATE " + USER_CREDENTIALS_TABLE_NAME + " SET " +
+                USER_NOTIFY_COLUMN_NAME + " = '" + state + "' WHERE " +
+                USER_NAME_COLUMN_NAME + " = '" + userName + "'";
+        try{
+            database.execSQL(command);
+            return true;
+        }catch (SQLException e){
+            Log.e("MyApp", "LogCurrentWeight", e);
+            return false;
+        }
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create user credentials and goal table
@@ -337,7 +377,8 @@ public class SQLiteManager extends  SQLiteOpenHelper{
                 USER_ID_COLUMN_NAME + " INTEGER PRIMARY KEY," +
                 USER_NAME_COLUMN_NAME + " TEXT," +
                 USER_PASSWORD_COLUMN_NAME + " TEXT, " +
-                USER_GOAL_WEIGHT_COLUMN_NAME + " TEXT)");
+                USER_GOAL_WEIGHT_COLUMN_NAME + " TEXT, " +
+                USER_NOTIFY_COLUMN_NAME + " TEXT)");
 
         // Create user log table
         db.execSQL("CREATE TABLE " + USER_LOG_TABLE_NAME + " (" +

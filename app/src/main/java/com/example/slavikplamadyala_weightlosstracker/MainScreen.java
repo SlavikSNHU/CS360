@@ -2,13 +2,19 @@ package com.example.slavikplamadyala_weightlosstracker;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.gridlayout.widget.GridLayout;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainScreen extends AppCompatActivity {
-    private  SQLiteManager db;
+    private static final int PERMISSION_SEND_SMS = 123;
+    private SQLiteManager db;
     private String userName;
 
     @Override
@@ -32,20 +39,38 @@ public class MainScreen extends AppCompatActivity {
         // Connect to database
         db = new SQLiteManager(this);
 
+        // Set permission to send messages
+        RequestSmsPermission();
+
         // Update UI to match user current progress
         UpdateMainUI();
+
 
         // Configure all main screen UI events
         ConfigureControlEvents(this);
     }
 
-    private void PopulateGridComponents(SQLiteManager.UserLog[] userLogs){
+    /**
+     * Prompt user to allow app to send messages
+     */
+    private void RequestSmsPermission() {
+
+        // check permission is given
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            // request permission (see result in onRequestPermissionsResult() method)
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.SEND_SMS},
+                    PERMISSION_SEND_SMS);
+        }
+    }
+
+    private void PopulateGridComponents(SQLiteManager.UserLog[] userLogs) {
         GridLayout gl = findViewById(R.id.mainLayout);
-        for(int i = 0; i < gl.getChildCount(); i++){
-            LinearLayout layout = (LinearLayout)gl.getChildAt(i);
+        for (int i = 0; i < gl.getChildCount(); i++) {
+            LinearLayout layout = (LinearLayout) gl.getChildAt(i);
 
             // Check bounds and set control visibility
-            if(i >= userLogs.length) {
+            if (i >= userLogs.length) {
                 layout.setVisibility(View.INVISIBLE);
                 continue;
             }
@@ -54,21 +79,23 @@ public class MainScreen extends AppCompatActivity {
             layout.setVisibility(View.VISIBLE);
 
             // Set date
-            ((TextView)layout.getChildAt(0)).setText(userLogs[i].Date);
+            ((TextView) layout.getChildAt(0)).setText(userLogs[i].Date);
 
             // Set weight
-            ((TextView)layout.getChildAt(1)).setText(userLogs[i].Weight);
+            ((TextView) layout.getChildAt(1)).setText(userLogs[i].Weight);
         }
     }
-    private void HideLogs(){
+
+    private void HideLogs() {
         // Set all logs invisible
         GridLayout gl = findViewById(R.id.mainLayout);
-        for(int i = 0; i < gl.getChildCount(); i++){
-            LinearLayout layout = (LinearLayout)gl.getChildAt(i);
+        for (int i = 0; i < gl.getChildCount(); i++) {
+            LinearLayout layout = (LinearLayout) gl.getChildAt(i);
             // Make control visible
             layout.setVisibility(View.INVISIBLE);
         }
     }
+
     /**
      * Update current UI with data from database
      */
@@ -85,7 +112,7 @@ public class MainScreen extends AppCompatActivity {
         pb.setProgress(0);
 
         // Make sure correct values been gathered from database
-        if(currentGoal < 0 || lastWeight < 0){
+        if (currentGoal < 0 || lastWeight < 0) {
             HideLogs();
             return;
         }
@@ -93,13 +120,19 @@ public class MainScreen extends AppCompatActivity {
         pb.setMin(0);
 
         // Determine if goal has been reached
-        if(currentGoal < lastWeight){
+        if (currentGoal < lastWeight) {
             pb.setMax(lastWeight);
             pb.setProgress(currentGoal);
-        }else{
+        } else {
             // Goal achieved!
             pb.setMax(currentGoal);
             pb.setProgress(currentGoal);
+
+            // Check if SMS should be sent
+            if (db.ShouldSendMessages(userName)) {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage("555-521-5554", null, "Congratulation You Have Reached Goal Weight", null, null);
+            }
 
             // Display congratulation message
             new AlertDialog.Builder(this)
@@ -117,10 +150,10 @@ public class MainScreen extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .show();
 
-            // Clear all records
+            /* Clear all records
             if(!db.ClearLogs(userName)){
                 return;
-            }
+            }*/
         }
 
         // Update goal text
@@ -225,21 +258,32 @@ public class MainScreen extends AppCompatActivity {
         });
     }
 
+    /**
+     * Prompt user if they want to receive weight goal achieved messages
+     * @param view
+     */
     public void SetMessageAccess(View view) {
         new AlertDialog.Builder(this)
                 .setTitle("Message Permission")
-                .setMessage("Allow app sending messages to track progress?")
+                .setMessage("Allow app sending messages when goal is achieved?")
 
                 // Specifying a listener allows you to take an action before dismissing the dialog.
                 // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Start sending messages
+                        db.SetSendMessages(userName, "True");
                     }
                 })
 
                 // A null listener allows the button to dismiss the dialog and take no further action.
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Stop sending messages
+                        db.SetSendMessages(userName, "False");
+                    }
+                })
+
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
